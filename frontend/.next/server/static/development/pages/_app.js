@@ -324,12 +324,6 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-var MyButton = styled.button.withConfig({
-  displayName: "Page__MyButton",
-  componentId: "sc-4u7a64-0"
-})(["background:orange;font-size:", ";span{font-size:100px;}"], function (props) {
-  return props.huge ? '100px' : '50px';
-});
 
 var Page =
 /*#__PURE__*/
@@ -348,19 +342,19 @@ function (_Component) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 17
+          lineNumber: 8
         },
         __self: this
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Meta__WEBPACK_IMPORTED_MODULE_2__["default"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 18
+          lineNumber: 9
         },
         __self: this
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Header__WEBPACK_IMPORTED_MODULE_1__["default"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 19
+          lineNumber: 10
         },
         __self: this
       }), this.props.children);
