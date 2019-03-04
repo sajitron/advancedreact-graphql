@@ -1,6 +1,20 @@
 import Link from "next/link";
-import Nav from "./Nav";
+import Router from 'next/router';
+import NProgress from 'nprogress';
 import styled from 'styled-components';
+import Nav from "./Nav";
+
+// use for visualizing route changes
+Router.onRouteChangeStart = () => {
+	NProgress.start();
+}
+
+Router.onRouteChangeComplete = () => {
+	NProgress.done();
+}
+
+Router.onChangeError = () => console.log('onRouteChangeError Triggered');
+
 
 const Logo = styled.h1`
 	font-size: 4rem;
