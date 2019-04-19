@@ -9,7 +9,7 @@ import router from "next/dist/lib/router";
 import { fi } from "date-fns/esm/locale";
 
 const CREATE_ITEM_MUTATION = gql`
-  mutation CREATE_ITEM(
+  mutation CREATE_ITEM_MUTATION(
     $title: String!
     $description: String!
     $price: Int!
@@ -30,11 +30,11 @@ const CREATE_ITEM_MUTATION = gql`
 
 class CreateItem extends Component {
   state = {
-    title: "",
-    description: "",
-    image: "",
-    largeImage: "",
-    price: 0
+    title: "Book",
+    description: "Read books",
+    image: "book.jpg",
+    largeImage: "large-book.jpg",
+    price: 1000
   };
 
   handleChange = e => {
