@@ -14,6 +14,7 @@ const DELETE_ITEM_QUERY = gql`
 export default class DeleteItem extends Component {
   // Apollo gives you access to the cache and the data from the item that comes back from the server
   update = (cache, payload) => {
+    console.log(data, payload);
     // manually update the cache on the client, so it matches the server
     // 1. Read the cache for the items we want
     const data = cache.readQuery({ query: ALL_ITEMS_QUERY });

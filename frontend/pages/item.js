@@ -6,4 +6,4 @@ const Item = props => (
   </div>
 );
 
-export default Home;
+export default Item;

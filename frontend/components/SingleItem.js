@@ -42,7 +42,7 @@ export default class SingleItem extends Component {
         {({ error, loading, data }) => {
           if (error) return <Error error={error} />;
           if (loading) return <p>Loading!</p>;
-          if (!DataCue.item) return <p>No Item Found For {this.props.id}</p>;
+          if (!data.item) return <p>No Item Found For {this.props.id}</p>;
           const item = data.item;
           return (
             <SingleItemStyles>
@@ -57,7 +57,6 @@ export default class SingleItem extends Component {
             </SingleItemStyles>
           );
         }}
-        <p>Holla</p>
       </Query>
     );
   }
