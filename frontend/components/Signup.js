@@ -57,7 +57,7 @@ export default class Signup extends Component {
                   />
                 </label>
                 <label htmlFor="name">
-                  Email
+                  Name
                   <input
                     type="text"
                     name="name"
@@ -67,7 +67,7 @@ export default class Signup extends Component {
                   />
                 </label>
                 <label htmlFor="password">
-                  Email
+                  Password
                   <input
                     type="password"
                     name="password"
