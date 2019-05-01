@@ -100,6 +100,10 @@ const Mutations = {
     });
     // return the user
     return user;
+  },
+  signout(parent, args, ctx, info) {
+    ctx.response.clearCookie("token");
+    return { message: "Au Revoir!" };
   }
 };
 
