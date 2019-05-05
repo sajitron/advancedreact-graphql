@@ -8,9 +8,18 @@ const Mutations = {
   async createItem(parent, args, ctx, info) {
     // @TODO check if they are logged in
     // our mutation types can be found in the geberated prisma.graphql file
+    if (!ctx.request.userId)
+      throw new Error("You must be logged in to perform this action");
+
     const item = await ctx.db.mutation.createItem(
       {
         data: {
+          // this is how we create a relationship between the item and the user
+          user: {
+            connect: {
+              id: ctx.request.userId
+            }
+          },
           ...args
         }
       },
