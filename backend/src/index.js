@@ -24,6 +24,23 @@ server.express.use((req, res, next) => {
   next();
 });
 
+// Create a middleware that populates the user on each request
+server.express.use(async (req, res, next) => {
+  // if they aren't logged in, skip this
+  if (!req.userId) return next();
+  const user = await db.query.user(
+    {
+      where: {
+        id: req.userId
+      }
+    },
+    "{id, permissions, email, name}" // we want these details from the logged in user
+  );
+  req.user = user;
+  // we place the populated user object on the request object so we can have access to the user details eg permissions for use in places like permissions.js
+  next();
+});
+
 server.start(
   {
     cors: {
