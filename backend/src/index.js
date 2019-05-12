@@ -36,8 +36,8 @@ server.express.use(async (req, res, next) => {
     },
     "{id, permissions, email, name}" // we want these details from the logged in user
   );
-  req.user = user;
   // we place the populated user object on the request object so we can have access to the user details eg permissions for use in places like permissions.js
+  req.user = user;
   next();
 });
 

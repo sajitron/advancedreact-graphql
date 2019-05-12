@@ -1,9 +1,9 @@
 import { Query } from "react-apollo";
-import PropTypes from "prop-types";
 import gql from "graphql-tag";
 import Error from "./ErrorMessage";
 import Table from "./styles/Table";
 import SickButton from "./styles/SickButton";
+import PropTypes from "prop-types";
 
 const possiblePermissions = [
   "ADMIN",
@@ -30,26 +30,30 @@ const Permissions = props => (
     {({ data, loading, error }) => (
       <div>
         <Error error={error} />
-        <div>
-          <h2>Manage Permissions</h2>
-          <Table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                {possiblePermissions.map(permission => (
-                  <th key={permission}>{permission}</th>
+        {loading ? (
+          <p>Loading users...</p>
+        ) : (
+          <div>
+            <h2>Manage Permissions</h2>
+            <Table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  {possiblePermissions.map(permission => (
+                    <th key={permission}>{permission}</th>
+                  ))}
+                  <th>👇</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.users.map(user => (
+                  <UserPermissions user={user} key={user.id} />
                 ))}
-                <th>👇</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.users.map(user => (
-                <UserPermissions user={user} key={user.id} />
-              ))}
-            </tbody>
-          </Table>
-        </div>
+              </tbody>
+            </Table>
+          </div>
+        )}
       </div>
     )}
   </Query>
@@ -72,17 +76,17 @@ class UserPermissions extends React.Component {
   handlePermissionChange = e => {
     const checkbox = e.target;
     // take a copy of the permissions
-    let updatePermissions = [...this.state.permissions];
+    let updatedPermissions = [...this.state.permissions];
     // figure out if we need to remove or add this checkbox
     if (checkbox.checked) {
       // add it in
-      updatePermissions.push(checkbox.value);
+      updatedPermissions.push(checkbox.value);
     } else {
-      updatePermissions = updatePermissions.filter(
+      updatedPermissions = updatedPermissions.filter(
         permission => permission !== checkbox.value
       );
     }
-    this.setState({ permissions: updatePermissions });
+    this.setState({ permissions: updatedPermissions });
   };
 
   render() {
