@@ -2,6 +2,7 @@ import withApollo from "next-with-apollo";
 // next with apollo gives an HOC that exposes apllo client as a prop
 import ApolloClient from "apollo-boost";
 import { endpoint } from "../config";
+import { LOCAL_STATE_QUERY } from "../components/Cart";
 
 function createClient({ headers }) {
   return new ApolloClient({
@@ -13,6 +14,30 @@ function createClient({ headers }) {
         },
         headers
       });
+    },
+    // local data
+    clientState: {
+      resolvers: {
+        // resolver for togglecart in Cart.js
+        Mutation: {
+          // we destructure cache from apollo client
+          toggleCart(_root, variables, { cache }) {
+            // read the cartOpen value from the cache
+            const { cartOpen } = cache.readQuery({
+              query: LOCAL_STATE_QUERY
+            });
+            // write the cart state to the opposite
+            const data = {
+              data: { cartOpen: !cartOpen }
+            };
+            cache.writeData(data);
+            return data;
+          }
+        }
+      },
+      defaults: {
+        cartOpen: true
+      }
     }
   });
 }
