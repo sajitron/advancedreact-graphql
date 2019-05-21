@@ -6,8 +6,10 @@ import gql from "graphql-tag";
 import { CURRENT_USER_QUERY } from "./User";
 
 const REMOVE_FROM_CART_MUTATION = gql`
-  mutation removeFromCart(id: $id) {
-    id
+  mutation removeFromCart($id: ID!) {
+    removeFromCart(id: $id) {
+      id
+    }
   }
 `;
 
