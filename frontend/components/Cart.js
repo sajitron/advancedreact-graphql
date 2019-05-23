@@ -1,6 +1,6 @@
 import React from "react";
 import { Query, Mutation } from "react-apollo";
-import {} from "react-adopt"; // used to deal with render props issues
+import { adopt } from "react-adopt"; // used to deal with render props issues
 import gql from "graphql-tag";
 import User from "./User";
 import CartStyles from "./styles/CartStyles";
@@ -38,7 +38,7 @@ const Composed = adopt({
 
 const Cart = () => (
   <Composed>
-    {({ user, toggleCart, localState }) => {
+    {({ user, toggleCart, localState, loading }) => {
       const me = user.data.me;
       if (!me) return null;
       return (

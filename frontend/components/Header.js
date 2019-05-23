@@ -4,6 +4,7 @@ import NProgress from "nprogress";
 import styled from "styled-components";
 import Nav from "./Nav";
 import Cart from "./Cart";
+import Search from "./Search";
 
 // use for visualizing route changes
 Router.onRouteChangeStart = () => {
@@ -65,7 +66,7 @@ const Header = () => (
       <Nav />
     </div>
     <div className="sub-bar">
-      <p>Search</p>
+      <Search />
     </div>
     <Cart />
   </StyledHeader>
