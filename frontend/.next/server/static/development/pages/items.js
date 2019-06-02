@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -698,7 +698,7 @@ __webpack_require__.r(__webpack_exports__);
 var _jsxFileName = "/mnt/c/dev/wesbos/frontend/components/Pagination.js";
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  query PAGINATION_QUERY {\n    itemsConnection {\n      aggregate {\n        count\n      }\n    }\n  }\n"]);
+  var data = _taggedTemplateLiteral(["\n\tquery PAGINATION_QUERY {\n\t\titemsConnection {\n\t\t\taggregate {\n\t\t\t\tcount\n\t\t\t}\n\t\t}\n\t}\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -761,7 +761,7 @@ var Pagination = function Pagination(props) {
     }, "Sick Fits! Page ", page, " of ", pages)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_4___default.a, {
       prefetch: true,
       href: {
-        pathname: "items",
+        pathname: 'items',
         query: {
           page: page - 1
         }
@@ -794,7 +794,7 @@ var Pagination = function Pagination(props) {
     }, count, " Items Total"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(next_link__WEBPACK_IMPORTED_MODULE_4___default.a, {
       prefetch: true,
       href: {
-        pathname: "items",
+        pathname: 'items',
         query: {
           page: page + 1
         }
@@ -1056,14 +1056,29 @@ var Home = function Home(props) {
 
 /***/ }),
 
-/***/ 3:
+/***/ "./pages/items.js":
+/*!************************!*\
+  !*** ./pages/items.js ***!
+  \************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./index */ "./pages/index.js");
+
+/* harmony default export */ __webpack_exports__["default"] = (_index__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+/***/ }),
+
+/***/ 5:
 /*!******************************!*\
-  !*** multi ./pages/index.js ***!
+  !*** multi ./pages/items.js ***!
   \******************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! ./pages/index.js */"./pages/index.js");
+module.exports = __webpack_require__(/*! ./pages/items.js */"./pages/items.js");
 
 
 /***/ }),
@@ -1146,4 +1161,4 @@ module.exports = require("styled-components");
 /***/ })
 
 /******/ });
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=items.js.map

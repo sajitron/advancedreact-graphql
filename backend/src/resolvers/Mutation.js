@@ -1,9 +1,19 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { randomBytes } = require("crypto");
-const { promisify } = require("util");
-const { transport, makeANiceEmail } = require("../mail");
-const { hasPermission } = require("../utils");
+const {
+  randomBytes
+} = require("crypto");
+const {
+  promisify
+} = require("util");
+const {
+  transport,
+  makeANiceEmail
+} = require("../mail");
+const {
+  hasPermission
+} = require("../utils"); 
+const stripe = require('../stripe')
 
 const Mutations = {
   async createItem(parent, args, ctx, info) {
@@ -12,8 +22,7 @@ const Mutations = {
     if (!ctx.request.userId)
       throw new Error("You must be logged in to perform this action");
 
-    const item = await ctx.db.mutation.createItem(
-      {
+    const item = await ctx.db.mutation.createItem({
         data: {
           // this is how we create a relationship between the item and the user
           user: {
@@ -32,12 +41,13 @@ const Mutations = {
 
   updateItem(parent, args, ctx, info) {
     // first take a copy of the updates
-    const updates = { ...args };
+    const updates = {
+      ...args
+    };
     // remove the id from updates
     delete updates.id;
     // run the update method
-    return ctx.db.mutation.updateItem(
-      {
+    return ctx.db.mutation.updateItem({
         data: updates,
         where: {
           id: args.id
@@ -48,22 +58,23 @@ const Mutations = {
   },
 
   async deleteItem(parent, args, ctx, info) {
-    const where = { id: args.id };
+    const where = {
+      id: args.id
+    };
     // 1. find the item
-    const item = await ctx.db.query.item({ where }, `{id title user {id}}`);
+    const item = await ctx.db.query.item({
+      where
+    }, `{id title user {id}}`);
     // 2. check if they own that item, or have the permissions
     const ownsItem = item.user.id === ctx.request.userId;
     // loop over the user's permission ad check if its in the array of permissions required to delete
-    const hasPermissions = ctx.request.user.permissions.some(permission =>
-      ["ADMIN", "ITEMDELETE"].includes(permission)
-    );
+    const hasPermissions = ctx.request.user.permissions.some(permission => ["ADMIN", "ITEMDELETE"].includes(permission));
 
     if (!ownsItem && !hasPermissions) {
       throw new Error("You don't have permission to do that!!");
     }
     // 3. Delete it
-    ctx.db.mutation.deleteItem(
-      {
+    ctx.db.mutation.deleteItem({
         where
       },
       info
@@ -76,18 +87,21 @@ const Mutations = {
     // hash the password
     const password = await bcrypt.hash(args.password, 10);
     // create the user in the db
-    const user = await ctx.db.mutation.createUser(
-      {
+    const user = await ctx.db.mutation.createUser({
         data: {
           ...args,
           password,
-          permissions: { set: ["USER"] }
+          permissions: {
+            set: ["USER"]
+          }
         }
       },
       info
     );
     // create the jwt token
-    const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
+    const token = jwt.sign({
+      userId: user.id
+    }, process.env.APP_SECRET);
     // set the jwt as a cookie on the response
     ctx.response.cookie("token", token, {
       httpOnly: true,
@@ -96,7 +110,10 @@ const Mutations = {
     // return the user to the browser
     return user;
   },
-  async signin(parent, { email, password }, ctx, info) {
+  async signin(parent, {
+    email,
+    password
+  }, ctx, info) {
     // check if there is a user with that email
     const user = await ctx.db.query.user({
       where: {
@@ -113,7 +130,9 @@ const Mutations = {
       throw new Error("Invalid password");
     }
     // generate the JWT token
-    const token = jwt.sign({ userId: user.id }, process.env.APP_SECRET);
+    const token = jwt.sign({
+      userId: user.id
+    }, process.env.APP_SECRET);
     // set the cookie with the token
     ctx.response.cookie("token", token, {
       httpOnly: true,
@@ -124,19 +143,30 @@ const Mutations = {
   },
   signout(parent, args, ctx, info) {
     ctx.response.clearCookie("token");
-    return { message: "Au Revoir!" };
+    return {
+      message: "Au Revoir!"
+    };
   },
   async requestReset(parent, args, ctx, info) {
     // check if this is a real user
-    const user = await ctx.db.query.user({ where: { email: args.email } });
+    const user = await ctx.db.query.user({
+      where: {
+        email: args.email
+      }
+    });
     if (!user) throw new Error(`No user with the email ${args.email}`);
     // set a reset token and expiry on that user
     const randomBytesPromisified = promisify(randomBytes);
     const resetToken = (await randomBytesPromisified(20)).toString("hex");
     const resetTokenExpiry = Date.now() + 3600000; // 1 hour from current date
     const res = await ctx.db.mutation.updateUser({
-      where: { email: args.email },
-      data: { resetToken, resetTokenExpiry }
+      where: {
+        email: args.email
+      },
+      data: {
+        resetToken,
+        resetTokenExpiry
+      }
     });
 
     // Email the reset token
@@ -152,7 +182,9 @@ const Mutations = {
     });
 
     // return the message
-    return { message: "Password Reset?" };
+    return {
+      message: "Password Reset?"
+    };
   },
   async resetPassword(parent, args, ctx, info) {
     // check if the passwords match
@@ -174,7 +206,9 @@ const Mutations = {
     const password = await bcrypt.hash(args.password, 10);
     // save the new password to the user and remove old reset token fields
     const updatedUser = await ctx.db.mutation.updateUser({
-      where: { email: user.email },
+      where: {
+        email: user.email
+      },
       data: {
         password,
         resetToken: null,
@@ -182,7 +216,9 @@ const Mutations = {
       }
     });
     // generate JWT
-    const token = jwt.sign({ userId: updatedUser.id }, process.env.APP_SECRET);
+    const token = jwt.sign({
+      userId: updatedUser.id
+    }, process.env.APP_SECRET);
     // set the JWT cookie
     ctx.response.cookie("token", token, {
       httpOnly: true,
@@ -197,8 +233,7 @@ const Mutations = {
       throw new Error("You must be logged in");
     }
     // query the current user
-    const currentUser = await ctx.db.query.user(
-      {
+    const currentUser = await ctx.db.query.user({
         where: {
           id: ctx.request.userId
         }
@@ -208,8 +243,7 @@ const Mutations = {
     // check if they have permission to do this
     hasPermission(ctx.request.user, ["ADMIN", "PERMISSIONUPDATE"]);
     // update the permissions
-    return ctx.db.mutation.updateUser(
-      {
+    return ctx.db.mutation.updateUser({
         data: {
           permissions: {
             set: args.permissions // since permissions has its own enum, we use SET
@@ -224,7 +258,9 @@ const Mutations = {
   },
   async addToCart(parent, args, ctx, info) {
     // make sure they are signed in
-    const { userId } = ctx.request;
+    const {
+      userId
+    } = ctx.request;
     if (!userId) {
       throw new Error("You must be signed in sooon");
     }
@@ -242,8 +278,7 @@ const Mutations = {
     // check if that item is already in their cart and increment by 1 if it is
     if (existingCartItem) {
       console.log("This item is already in the cart");
-      return ctx.db.mutation.updateCartItem(
-        {
+      return ctx.db.mutation.updateCartItem({
           where: {
             id: existingCartItem.id
           },
@@ -255,14 +290,17 @@ const Mutations = {
       );
     }
     // if its not, create a fresh cartitem for that user
-    return ctx.db.mutation.createCartItem(
-      {
+    return ctx.db.mutation.createCartItem({
         data: {
           user: {
-            connect: { id: userId }
+            connect: {
+              id: userId
+            }
           },
           item: {
-            connect: { id: args.id }
+            connect: {
+              id: args.id
+            }
           }
         }
       },
@@ -271,8 +309,7 @@ const Mutations = {
   },
   async removeFromCart(parent, args, ctx, info) {
     // fimd the cart item
-    const cartItem = await ctx.db.query.cartItem(
-      {
+    const cartItem = await ctx.db.query.cartItem({
         where: {
           id: args.id
         }
@@ -286,12 +323,58 @@ const Mutations = {
       throw new Error("Are you okay?");
     }
     // delete that cart item
-    return ctx.db.mutation.deleteCartItem(
-      {
-        where: { id: args.id }
+    return ctx.db.mutation.deleteCartItem({
+        where: {
+          id: args.id
+        }
       },
       info
     );
+  },
+  async createOrder(parent, args, ctx, info) {
+    // query the current user and make sure they are signed in
+    const {
+      userId
+    } = ctx.request;
+    if (!userId) throw new Error("You must be signed in to complete this order");
+    const user = await ctx.db.query.user({
+        where: {
+          id: userId
+        }
+      },
+      `{
+        id
+        name
+        email
+        cart {
+          id
+          quantity
+          item {
+            title
+            price
+            id
+            description
+            image
+          }
+        }
+      }`
+    );
+    // recalculate the price total
+    const amount = user.cart.reduce((tally, cartItem) => tally + cartItem.price * cartItem.quantity, 0);
+
+    console.log(`Charging ${amount} dollars`);
+    //creae the stripe charge - turn token into money
+    const charge = await stripe.charges.create({
+      amount,
+      currency: 'USD',
+      source: args.token
+    })
+    // convert cartItems to orderItems
+    // create the order
+    // clean up - clear the users cart
+    // delete cart items
+    // return the order to the client
+
   }
 };
 

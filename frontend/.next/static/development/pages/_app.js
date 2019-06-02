@@ -1532,8 +1532,8 @@ function (_React$Component) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_stripe_checkout__WEBPACK_IMPORTED_MODULE_1___default.a, {
           amount: Object(_lib_calcTotalPrice__WEBPACK_IMPORTED_MODULE_7__["default"])(me.cart),
           name: "Sick fits",
-          description: "Order of ".concat(totalItems(me.cart), " items"),
-          image: me.cart[0].item && me.cart[0].item.image,
+          description: "Order of ".concat(totalItems(me.cart), " items") // image={me.cart[0].item && me.cart[0].item.image}
+          ,
           stripeKey: "pk_test_OYcxbRfik3MKtgwlmdMnqqfe",
           currency: "USD",
           email: me.email,
